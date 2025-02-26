@@ -34,7 +34,6 @@
             margin-left: 10px;
         }
 
-        /* Main Container */
         .container {
             width: 90%;
             max-width: 400px;
@@ -55,7 +54,6 @@
             box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
         }
 
-        /* Input Fields */
         input, textarea {
             width: 100%;
             padding: 12px;
@@ -81,7 +79,7 @@
        
         .btn-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-top: 15px;
         }
 
@@ -335,7 +333,7 @@
             <div class="nav-menu" id="navMenu">
                 <a href="#">Home</a>
                 <a href="#">Encrypt</a>
-                <a href="#">Decrypt</a>
+                <a href="decrypt.html">Decrypt</a>
                 <a href="#">About</a>
             </div>
             
@@ -359,16 +357,18 @@
             <img src="encryption.jpg" id="iconImage" alt="Encryption Icon" style="border-radius: 550px;">
         </div>
 
-        
-        <textarea id="inputText" placeholder="Enter text here..."></textarea>
         <input type="text" id="encryptionKey" placeholder="Enter Secret Key">
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
 
         <div class="btn-container">
-            <button onclick="encryptData()">Encrypt</button>
-            <button onclick="decryptData()">Decrypt</button>
+            <button onclick="encryptData()" >Encrypt</button>
+            
         </div>
 
-        <div id="output">Output will appear here...</div>
+         <div class="output-container">
+            <div id="output">Output will appear here...</div>
+            <button class="copy-btn" onclick="copyToClipboard()">📋(COPY)</button>
+        </div>
     </div>
 
     <script>
@@ -393,27 +393,9 @@ themeToggle.addEventListener("change", function () {
 });
 
 
-        function encryptData() {
-            let text = document.getElementById("inputText").value;
-            let key = document.getElementById("encryptionKey").value;
-            if (!text || !key) {
-                alert("Enter text & a secret key!");
-                return;
-            }
-            let encrypted = btoa(text);
-            document.getElementById("output").innerText = "🔐 " + encrypted;
-        }
-
-        function decryptData() {
-            let text = document.getElementById("inputText").value;
-            try {
-                let decrypted = atob(text);
-                document.getElementById("output").innerText = "🔓 " + decrypted;
-            } catch {
-                document.getElementById("output").innerText = "❌ Invalid input!";
-            }
-        }
+        
     </script>
+    <script src="en.js"></script>
     <style>
         .switch {
           font-size: 17px;
@@ -521,7 +503,77 @@ themeToggle.addEventListener("change", function () {
         
         .input:checked + .slider:before {
           transform: translateX(30px);
-        }</style>
+        }
+        .output-container {
+        position: relative;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .copy-btn {
+        margin-top: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .copy-btn:hover {
+        background: #0056b3;
+    }</style>
+   
+<div id="copyNotification" class="notification">Copied to clipboard!</div>
+
+<script>
+    function copyToClipboard() {
+        let outputDiv = document.getElementById("output");
+        let textToCopy = outputDiv.innerText;
+
+        if (textToCopy.trim() === "Output will appear here..." || textToCopy.trim() === "") {
+            return;
+        }
+
+       
+        let tempTextArea = document.createElement("textarea");
+        tempTextArea.value = textToCopy;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+
+        let notification = document.getElementById("copyNotification");
+        notification.style.display = "block";
+        notification.style.opacity = "1";
+
+        
+        setTimeout(() => {
+            notification.style.opacity = "0";
+            setTimeout(() => { notification.style.display = "none"; }, 300);
+        }, 2000);
+    }
+</script>
+
+<style>
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 14px;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+</style>
+
 
 </body>
 </html>
